@@ -1,0 +1,22 @@
+[
+  {
+    "ID*": 1,
+    "Title": "",
+    "Artist*": "Bobba Fett",
+    "Dated": 2023,
+    "Size": "16 x 98 x 16",
+    "Materials": "Printmedia",
+    "Description": "",
+    "Class": ""
+  },
+  {
+    "ID*": 2,
+    "Title": "Pulp window installation #2",
+    "Artist*": "Jeff Buckley",
+    "Dated": 2023,
+    "Size": "23 x 36",
+    "Materials": "Pulp",
+    "Description": "",
+    "Class": "Papermaking"
+  }
+]

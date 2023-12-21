@@ -1,0 +1,25 @@
+---
+const { href, title, artist, img_url } = Astro.props;
+---
+
+<a href={ href }>
+  <article class="card-artwork">
+    <img class="card-artwork__image" src={ img_url } alt=`Thumbnail for ${ artist }'s work: ${ title }`>
+    <p class="card-artwork__artist">
+       { artist }
+    </p>
+    <p class="card-artwork__title">
+       { title }
+    </p>
+  </article>
+</a>
+
+<style lang="scss">
+  .card-artwork {
+    img {
+      min-width: 100px;
+      min-height: 100px;
+      background-color: grey;
+    }
+  }
+</style>

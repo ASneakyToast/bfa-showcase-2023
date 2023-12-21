@@ -1,0 +1,18 @@
+---
+import logoLockupOne from "../assets/cca-logo-lockup-one.svg?raw";
+import logoLockupTwo from "../assets/cca-logo-lockup-two.svg?raw";
+import logoLockupThree from "../assets/cca-logo-lockup-three.svg?raw";
+
+const { type } = Astro.props;
+
+const svg = ( 
+  type=="one" ? logoLockupOne
+  :type=="two" ? logoLockupTwo
+  :type=="three" ? logoLockupThree
+  : logoLockupOne
+)
+---
+
+<div class="cca-logo">
+  <Fragment set:html={ svg } />
+</div>

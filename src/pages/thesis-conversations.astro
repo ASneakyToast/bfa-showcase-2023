@@ -1,0 +1,114 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="CCA | 2023 BFA Showcase">
+  <main>
+    <div class="navigation">
+      <section class="navigation__header">
+        <a href="https://cca.edu" target="_blank">
+          <p class="navigation__logo">California College of the Arts</p>
+        </a>
+        <h1>2023 BFA Showcase</h1>
+      </section>
+    </div>
+
+    <div class="thesis-conversations">
+      <h2>2023 BFA Thesis Converstaions</h2>
+      <p>BFA Senior Thesis Conversations are live virtual events where graduating students from CCA's Textiles, Photography, Individualized Studies, Sculpture, Glass, Printmedia, Jewelry and Metal Arts, Ceramics, Community Arts, and Painting and Drawing programs publicly share their capstone work.</p>
+      <p>Each event features student presentations, responses from art professionals, and time for discussion. Through this online presentation we celebrate each student’s dedication to art-making during their time at CCA, and provide a way for family, friends, and the general public to connect with and celebrate student work.</p>
+
+      <!-- I don't like this style, let's do a multi-to-single video thing -->
+      <!--
+      <h3>> Furniture, Jewelry and Metal Arts, Ceramics</h3>
+      <img style="width: 460px; height: 220px; background: grey;">
+
+      <h3>> Painting and Drawing</h3>
+      <img style="width: 460px; height: 220px; background: grey;">
+
+      <h3>> Individualized Studies, Sculpture, Jewelry and Metal Arts, Printmedia</h3>
+      <img style="width: 460px; height: 220px; background: grey;">
+      -->
+
+      <!-- Ah I don't even think this would work because there multi videos per program -->
+      <!--
+      <section class="thesis-conversations__programs">
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Furniture</h3>
+        </article>
+
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Jewelry and Metal Arts</h3>
+        </article>
+
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Printmedia</h3>
+        </article>
+
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Sculpture</h3>
+        </article>
+
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Individualized Studios</h3>
+        </article>
+
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Ceramics</h3>
+        </article>
+
+        <article class="thesis-conversations__program-card">
+          <img style="width: 200px; height: 200px; background: grey;">
+          <h3>Painting and Drawing</h3>
+        </article>
+      </section>
+      -->
+
+      <!-- I may just have to link it from the artist page (which makes the most sense) -->
+      <!-- TODO: Delete this page -->
+    </div>
+  </main>
+</Layout>
+
+<style lang="scss">
+  main {
+    display: flex;
+    flex-direciton: row;
+    gap: 40px;
+  }
+
+  .navigation {
+    min-width: 300px;
+    max-width: 500px;
+    color: white;
+
+    &__header {
+      background-color: #111;    
+      padding: var(--spacing-page-gutter);
+    }
+
+    &__logo {
+      margin-bottom: 15px;
+    }
+
+    &__artists {
+      background-color: #222;    
+      padding: var(--spacing-page-gutter);
+      list-style: none;
+
+      li {
+        margin-bottom: 15px;
+      }
+    }
+
+    a {
+      color: white;
+    }
+  }
+</style>

@@ -1,0 +1,254 @@
+---
+import * as db from "../../utils/db-handler.js";
+import { slugify } from '../../utils/js-utils.js';
+import Layout from "../../layouts/Layout.astro";
+import Navigation from "../../components/Navigation.astro";
+import Gallery from "../../components/gallery-with-slideshow.svelte";
+
+// create routes
+export async function getStaticPaths() {
+  const statements = await Astro.glob( "../../content/statements/*.md" );
+  const artists = db.get_all_artists();
+
+  return db.get_all_artists().map(( data, index ) => {
+    // seralize data
+    // > slug
+    data["Slug"] = slugify( data["Name"] );
+
+    // > post 
+    statements.forEach( item => {
+      if ( data["Name"] == item.frontmatter.artist ) {
+        data["Post"] = item;
+      }
+    });
+
+    // > next artist
+    // console.log( index );
+    // TODO: grab next next item in array, if last then loop
+
+    // global page data
+    return {
+      params: { artist: data["Slug"] },
+      props: { data }
+    };
+  });
+}
+
+// scoped page data
+const { artist } = Astro.params;
+const { data } = Astro.props;
+
+
+const images = db.get_artist_images( data["Name"] );
+---
+
+<Layout title={`CCA | 2023 BFA Showcase | ${ data["Name"]}`}>
+  <main>
+    <Navigation />
+
+    <div class="content">
+
+      <div class="hero">
+        <img class="hero__image" src={ images[2] }/>
+      </div>
+
+      <div class="artist">
+        <h2 class="artist__name">{ data["Name"] }</h2>
+        <h3 class="artist__program">({ data["Program"] }, { data["Graduation"] })</h3>
+        <h4 class="artist__pronouns">{ data["Pronouns"] }</h4>
+
+        <div class="divider">
+          <div class="divider__horizontal" />
+        </div>
+
+        { data["Post"] &&
+          <section class="artist__statement">
+            <h2 class="artist__title">{ data["Post"].frontmatter.title }</h2>
+            <h4 class="artist__materials">{ data["Post"].frontmatter.materials }</h4>
+            <section class="artist__body" set:html={ data["Post"].compiledContent() } />
+          </section>
+        }
+
+        <ul class="artist__links">
+          { data["Instagram"] &&
+            <a href=`https://www.instagram.com/${ data["Instagram"] }`>
+              <li>@{ data["Instagram"] }</li>
+            </a>
+          }
+          { data["LinkedIn"] &&
+            <a href=`https://www.linkedin.com/in/${ data["LinkedIn"] }`>
+              <li>{ data["LinkedIn"] }</li>
+            </a>
+          }
+          { data["Website"] &&
+            <a href={ data["Website"] }>
+              <li>{ data["Website"] }</li>
+            </a>
+          }
+        </ul>
+
+        <Gallery 
+          client:only="svelte"
+          artist = { data["Name"] }
+          gallery_images = { images }
+        />
+
+        <section class="next-link">
+          <p>next artist</p>
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<style lang="scss">
+  html, body {
+    background: #111;
+  }
+
+  .divider {
+    --divider-top: 40px;
+    --divider-right: 33vw;
+    --divider-bottom: 40px;
+    --divider-left: 0;
+    --divider-size: 10px;
+
+    position: relative;
+    width: var(--divider-size);
+    height: var(--divider-size);
+
+    background: var(--color-white);;
+    border: 1px solid var(--color-black);
+
+    margin-bottom: var(--spacing-item-gap);
+
+    &__horizontal {
+      position: absolute;
+      left: var(--divider-size);
+
+      &:after {
+        content: "";
+        background: black;
+        position: absolute;
+        height: 1px;
+        width: var(--divider-right);
+        top: calc(var(--divider-size)/2);
+        left: var(--divider-size);
+      }
+    }
+  }
+
+  main {
+    display: flex;
+  }
+
+  .content {
+    background: white;
+    flex: 1;
+  }
+
+  .next-link {
+    display: none;
+  }
+
+  .hero {
+    display: none;
+    display: block;
+    position: relative;
+
+    & img {
+      width: 100%;
+      max-height: 66vh;
+      object-fit: cover;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 65%;
+      height: 20px;
+      background: white;
+    }
+  }
+
+  :global(.artist__body p) {
+    margin-bottom: var(--spacing-item-gap);
+  }
+
+  .artist {
+       /* padding: var(--spacing-section-heading) var(--spacing-page-gutter) var(--spacing-section-gap); */
+    padding: var(--spacing-section-gap) var(--spacing-page-gutter) var(--spacing-section-gap);
+    padding: var(--spacing-section-gap) var(--spacing-section-gap) var(--spacing-section-gap);
+
+    &__title {
+      font-size: var(--fontsize-xxlarge);
+      margin-bottom: var(--spacing-item-gap);
+      color: var(--color-navy);
+    }
+    &__materials {
+      font-size: var(--fontsize-large);
+      font-weight: 300;
+      margin-bottom: var(--spacing-item-gap);
+      color: var(--color-black);
+    }
+    &__name {
+      display: inline-block;
+      font-size: var(--fontsize-xxxlarge);
+      font-weight: 700;
+      margin-bottom: var(--spacing-element-gap);
+    }
+    &__program {
+      font-size: var(--fontsize-xlarge);
+      font-weight: 400;
+      display: inline-block;
+      margin-bottom: var(--spacing-element-gap);
+    }
+    &__pronouns {
+      display: none;
+      font-size: var(--fontsize-xlarge);
+      font-weight: 300;
+      margin-bottom: var(--spacing-item-gap);
+    }
+    &__links {
+      list-style: inside;
+      list-style-type: square;
+      margin-bottom: var(--spacing-element-gap);
+      & li {
+        margin-bottom: var(--spacing-item-gap);
+      }
+    }
+    &__statement {
+      font-size: var(--fontsize-normal);
+      line-height: 1.7;
+      margin-bottom: var(--spacing-element-gap);
+    }
+
+    & a {
+      color: var(--color-navy);
+    }
+    & a:hover {
+      color: var(--color-purple);
+    }
+
+    /*
+    &__images {
+       display: flex;
+       flex-wrap: wrap;
+       gap: var(--spacing-item-gap);
+    }
+       */
+    &__images {
+       columns: 2;
+       }
+
+    &__image {
+       //max-height: 280px;
+       width: 100%;
+      margin-bottom: var(--spacing-item-gap);
+    }
+  }
+</style>

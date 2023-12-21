@@ -1,0 +1,106 @@
+---
+import * as db from "../utils/db-handler.js";
+import { slugify } from '../utils/js-utils.js';
+import Layout from "../layouts/Layout.astro";
+import CCALogo from "../components/CCALogo.astro";
+import ExhibitionTitle from "../components/svgs/exhibition-title.astro";
+import ExhibitionSubTitle from "../components/svgs/fall-2023-fine-arts.astro";
+
+// for navigation list
+const artists = db.get_all_artists();
+---
+
+<Layout title="CCA | 2023 BFA Showcase">
+  <div class="menu">
+    <a href="https://cca.edu" target="_blank">
+      <CCALogo type="two" />
+    </a>
+
+    <section class="menu__header">
+      <a href="/">
+        <ExhibitionSubTitle />
+        <ExhibitionTitle />
+      </a>
+    </section>
+
+    <ul class="menu__artists">
+      { artists.map( artist => (
+        <li>
+          <a href=`/${ slugify(artist['Name']) }`>
+            { artist['Name'] }
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</Layout>
+
+<style lang="scss">
+  :global(.cca-logo svg) {
+    fill: white;
+    width: auto;
+    max-height: 34px;
+    padding: 18px 30px;
+  }
+
+  :global(.exhibition-sub-title, .exhibition-title) {
+    position: relative;
+    margin-bottom: var(--spacing-element-gap);
+    left: 10px;
+  }
+
+  :global(.exhibition-sub-title svg, .exhibition-title svg) {
+    height: auto;
+  }
+
+  .menu {
+    width: 100vw;
+
+    &__header {
+      padding: var(--spacing-element-gap);
+      position: relative;
+      max-width: 66vw;
+
+      &:before {
+        content: "";
+        background: black;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 88vw;
+        height: 7vh;
+      }
+    }
+
+    &__artists {
+      padding: var(--spacing-section-gap) var(--spacing-element-gap);
+      list-style: none;
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      background: black;
+
+      li {
+        margin-bottom: 15px;
+        width: fit-content;
+
+        font-family: "Brown", system-ui, sans-serif;
+        font-size: var(--fontsize-xlarge);
+        font-weight: var(--fontweight-label);
+
+        transition: all 100ms ease-in;
+
+        a:visited {
+          color: white;
+        }
+
+        &:hover {
+          background-color: white;
+          text-underline-offset: 7px;
+          a {
+            color: black;
+          }
+        }
+      }
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import svg from "../../assets/senior-exhibition.svg?raw";
+---
+<div class="exhibition-title">
+  <Fragment set:html={ svg } />
+</div>
+
+<style lang="scss" is:global>
+  .exhibition-title {
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    right: 40px;
+    bottom: 40px;
+    mix-blend-mode: exclusion;
+    filter: invert(1);
+    pointer-events: none;
+
+    svg {
+      height: 1000px;
+      max-height: 80vh;
+      max-width: 80%;
+    }
+  }
+</style>

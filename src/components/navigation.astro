@@ -1,0 +1,205 @@
+---
+import * as db from "../utils/db-handler.js";
+import CCALogo from "../components/CCALogo.astro";
+import { slugify } from '../utils/js-utils.js';
+
+// for navigation list
+const artists = db.get_all_artists();
+
+// for active navigation link
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
+---
+
+<div class="navigation">
+  <a href="https://cca.edu" target="_blank">
+    <CCALogo type="two" />
+  </a>
+
+  <section class="navigation__header">
+    <a href="/">
+      <h1>2023 BFA Showcase</h1>
+    </a>
+  </section>
+
+  <ul class="navigation__artists">
+    { artists.map( artist => (
+      <a href=`/${ slugify(artist['Name']) }`>
+        <li class={currentPath === slugify(artist['Name']) ? "navigation__artist--active" : ""}>{ artist['Name'] }</li>
+      </a>
+    ))}
+  </ul>
+</div>
+
+<a href="/menu">
+  <div class="nav-action-button">
+    wip
+    <div class="nav-action-button__bar"></div>
+    <div class="nav-action-button__bar"></div>
+    <div class="nav-action-button__bar"></div>
+  </div>
+</a>
+
+<script>
+  const nav_action_button = document.querySelector( ".nav-action-button" );
+  const navigation = document.querySelector( ".navigation" );
+
+  console.log( nav_action_button );
+  console.log( navigation );
+
+  nav_action_button.addEventListener( "click", () => {
+    navigation.classList.toggle( "navigation--closed" );
+    console.log( "click" );
+  });
+</script>
+
+<style lang="scss">
+
+  :global(.cca-logo svg) {
+    fill: white;
+    width: auto;
+    max-height: 34px;
+    padding: 18px 30px;
+    direction: ltr;
+  }
+
+  .nav-action-button {
+    display: block;
+
+    position: fixed;
+    background: black;
+    color: white;
+    width: 64px;
+    height: 64px;
+    bottom: var(--spacing-element-gap);
+    right: var(--spacing-element-gap);
+    z-index: 8;
+  }
+
+  .navigation {
+    display: block;
+    position: relative;
+
+    position: sticky;
+    top: 0;
+    background: #121212;
+
+    min-width: 150px;
+    max-width: 300px;
+    height: 100vh;
+
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+    direction: rtl;
+    scrollbar-color: blue;
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 7px;
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--color-black);
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0px;
+      background-color: var(--color-teal);
+    }
+
+    color: white;
+    a {
+      color: white;
+      text-decoration: none;
+      text-underline-offset: 4px;
+      transition: all 0.65ms ease-in;
+      &:hover {
+        color: var(--color-teal);
+        text-decoration: underline;
+        text-underline-offset: 5px;
+      }
+    }
+
+    &__header, &__artists {
+      direction: ltr;
+    }
+
+    &__header {
+      background-color: #111;    
+      text-decoration: underline;
+      text-underline-offset: 5px;
+      margin: var(--spacing-element-gap);
+    }
+
+    &__artists {
+      background-color: #121212;    
+      margin: var(--spacing-element-gap);
+      list-style: none;
+
+      li {
+        margin-bottom: 15px;
+
+        font-family: "Brown", system-ui, sans-serif;
+        font-size: var(--fontsize-normal);
+        font-weight: var(--fontweight-label);
+
+        transition: all 100ms ease-in;
+
+        &:hover {
+          text-underline-offset: 7px;
+          a {
+            color: black;
+          }
+        }
+      }
+    }
+
+    &__artist {
+      &--active {
+        color: var(--color-black);
+        background-color: var(--color-teal);
+        padding: 5px;
+        width: fit-content;
+        &:hover {
+          background-color: white;
+          color: black;
+        }
+      }
+    }
+
+
+    &--closed {
+      display: none !important;
+      display: none;
+    }
+  }
+
+  /* Mobile - Tablet */
+  @media (max-width: 767px) {
+
+    .navigation {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      z-index: 28;
+    }
+
+    .nav-action-button {
+      display: block;
+    }
+  }
+
+  /* Laptop + */
+  @media (min-width: 768px) {
+
+    .navigation {
+      display: block;
+      position: sticky;
+    }
+
+    .nav-action-button {
+      display: none;
+    }
+  }
+</style>
