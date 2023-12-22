@@ -1,10 +1,10 @@
 ---
 import * as db from "../utils/db-handler.js";
 import { slugify } from '../utils/js-utils.js';
-import Layout from "../layouts/Layout.astro";
-import CCALogo from "../components/CCALogo.astro";
+import Layout from "../layouts/layout.astro";
+import CCALogo from "../components/cca-logo.astro";
 import ExhibitionTitle from "../components/svgs/exhibition-title.astro";
-import ExhibitionSubTitle from "../components/svgs/fall-2023-fine-arts.astro";
+import ExhibitionSubTitle from "../components/svgs/fine-arts.astro";
 
 // for navigation list
 const artists = db.get_all_artists();
