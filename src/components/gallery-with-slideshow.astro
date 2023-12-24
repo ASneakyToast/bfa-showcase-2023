@@ -1,0 +1,233 @@
+---
+import { Image } from "astro:assets";
+
+let { gallery_images, artist_name } = Astro.props;
+
+const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gif}");
+---
+
+<div class="slideshow slideshow__hidden">
+  <div class="slideshow__close">wip</div>
+  <div class="slideshow__prev">wip</div>
+  <div class="slideshow__next">wip</div>
+
+  { gallery_images.map(( path ) => (
+    <div class="slideshow__slide">
+      <Image 
+        class="slideshow__image"
+        src={ processed_images[ path ]() }
+        alt={`Exhibition documentation of ${ artist_name }'s senior show.`}
+      />
+    </div>
+    ))}
+</div>
+
+<div class="gallery">
+  <section class="gallery__images">
+    { gallery_images.map(( path ) => (
+      <Image 
+        class="gallery__image"
+        src={ processed_images[ path ]() }
+        alt={ `Exhibition documentation of ${ artist_name }'s senior show.` }
+      />
+    ))}
+  </section>
+</div>
+
+<style lang="scss">
+  .gallery {
+    &__images {
+      columns: 2;
+      /* Laptop + */
+      @media (min-width: 768px) {
+        columns: 3;
+      }
+    }
+    &__image {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      margin-bottom: var(--spacing-item-gap);
+      cursor: pointer;
+    }
+  }
+
+  :global(.slideshow__hidden) {
+    display: none;
+  }
+
+  .slideshow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--color-black);
+    background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(255,255,255,1) 50%, rgba(255,255,255,1) 100%);
+    box-sizing: border-box;
+    padding: 110px;
+    overflow-x: hidden;
+    z-index: 16;
+
+    &__slide {
+      width: 100%;
+      height: 100%;
+
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      box-sizing: border-box;
+      padding: var(--spacing-section-gap);
+
+      /* transition: all 0.5s; */
+
+      img {
+        width: 100%;
+        height: 100%;
+        margin: auto;
+        object-fit: contain;
+      }
+    }
+
+    &__prev {
+      position: absolute;
+      left: var(--spacing-element-gap);
+    }
+    &__next {
+      position: absolute;
+      right: var(--spacing-element-gap);
+    }
+    &__close {
+      position: absolute;
+      top: var(--spacing-element-gap);
+      right: var(--spacing-element-gap);
+
+      float: right;
+    }
+
+    &__prev, &__next {
+      top: 0;
+      bottom: 0;
+      margin: auto;
+    }
+
+    &__prev, &__next, &__close {
+      width: 64px;
+      height: 64px;
+      background: white;
+      mix-blend-mode: exclusion;
+      z-index: 16;
+      cursor: pointer;
+    }
+  }
+</style>
+
+
+<script is:inline>
+  document.addEventListener('astro:page-load', () => {
+
+
+    // Slideshow elements
+    let slideshow = document.querySelector(".slideshow");
+    console.log( slideshow );
+
+    
+    let slides = slideshow.querySelectorAll(".slideshow__slide");
+    let prev = slideshow.querySelector(".slideshow__prev");
+    let next = slideshow.querySelector(".slideshow__next");
+    let close = slideshow.querySelector(".slideshow__close");
+
+    // Gallery elements
+    let gallery = document.querySelector(".gallery");
+    let gallery_elements = gallery.querySelectorAll(".gallery__image");
+
+    console.log( gallery_elements );
+
+    let curSlide = 0;
+    let maxSlide = (slides.length - 1);
+
+    // set initial translateX property to index * 100%
+    slides.forEach((slide, indx) => {
+      slide.style.transform = `translateX(${indx * 100}%)`;
+    });
+
+    // add event listener and navigation functionality
+    // > prev
+    prev.addEventListener("click", () => {
+      // check if current slide is the first and reset current slide to last
+      if (curSlide === 0) {
+        curSlide = maxSlide;
+      } else {
+        curSlide--;
+      }
+
+      // move slide by 100%
+      slides.forEach((slide, indx) => {
+        slide.style.transform = `translateX(${100 * (indx - curSlide)}%)`;
+      });
+    });
+
+    // > next
+    next.addEventListener("click", () => {
+      // check if current slide is the last and reset current slide
+      if (curSlide === maxSlide) {
+        curSlide = 0;
+      } else {
+        curSlide++;
+      }
+
+      console.log( "current slide | " + curSlide );
+
+      // move slide by -100%
+      slides.forEach((slide, indx) => {
+        slide.style.transform = `translateX(${100 * (indx - curSlide)}%)`;
+      });
+    });
+
+    // > close
+    close.addEventListener("click", () => {
+      slideshow.classList.toggle("slideshow__hidden");
+
+      // curSlide = 0;
+    });
+
+    // > open
+    gallery_elements.forEach(( image, gallery_index ) => {
+      image.addEventListener("click", () => {
+
+        console.log( "gallery index | " + gallery_index );
+
+        // toggle slideshow
+        slideshow.classList.toggle("slideshow__hidden");
+
+        // stop window scrolling 
+        // TODO;
+
+        // set to correct image 
+        // this isn't working bra
+        /*
+        slides.forEach((slide, slideshow_index) => {
+          console.log( "slide | " + slide );
+          console.log( "slideshow_index | " + slideshow_index );
+
+          slide.style.transform = `translateX(${(slideshow_index - gallery_index) * 100}%)`;
+        });
+
+        // set all image positions // this one works // what no it doesn't?
+        */
+        slides.forEach((slide, slideshow_index) => {
+          slide.style.transform = `translateX(${(slideshow_index - gallery_index) * 100}%)`;
+        });
+
+        // set slideshow counter
+        // curSlide = (gallery_index);
+        // curSlide = (gallery_index - 1);
+
+        console.log( "current slide | " + curSlide );
+
+      });
+    });
+
+  }, { once: false } );
+</script>

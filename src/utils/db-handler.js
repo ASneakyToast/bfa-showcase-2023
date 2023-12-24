@@ -74,9 +74,51 @@ export function get_artist_images( artist_name ) {
 
 
 /* and now after, using the checksum value */
-
+/*
 export function get_image_path( checksum ) {
   return `/images/${ checksum }.jpg`;
+}
+
+export function get_artist_images( artist_name ) {
+  // get all related images
+  const images = get_all_images().filter( item => {
+    return ( item["creator"] == artist_name );
+  });
+
+  // strip out filename
+  const filenames = images.map( image => {
+    return get_image_path( image.photo[0].checksum );
+  });
+
+  return filenames;
+}
+
+// takes single tag and gets photos that match
+export function get_tagged_images( tag ) {
+  // get all tagged images
+  const images = get_all_images().filter( item => {
+    // filter out untagged photos from causing error
+    if ( item.tag !== undefined ) {
+      return item.tag.includes( tag );
+    }
+  });
+  
+  // get path
+  const filenames = images.map( image => {
+    return get_image_path( image.photo[0].checksum );
+  });
+
+  return filenames;
+}
+*/
+
+
+
+/* and now using dynamic imports??! */
+/* only thing I really changed was the image path */
+
+export function get_image_path( checksum ) {
+  return `/src/assets/images/${ checksum }.jpg`;
 }
 
 export function get_artist_images( artist_name ) {

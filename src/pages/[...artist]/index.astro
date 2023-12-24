@@ -2,8 +2,9 @@
 import * as db from "../../utils/db-handler.js";
 import { slugify } from '../../utils/js-utils.js';
 import Layout from "../../layouts/layout.astro";
+import { Image } from "astro:assets";
 import Navigation from "../../components/navigation.astro";
-import Gallery from "../../components/gallery-with-slideshow.svelte";
+import Gallery from "../../components/gallery-with-slideshow.astro";
 
 // create routes
 export async function getStaticPaths() {
@@ -40,6 +41,46 @@ const { data } = Astro.props;
 
 
 const images = db.get_artist_images( data["Name"] );
+
+// basic import
+const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gif}");
+
+// middle import
+// > works tech. but it's a larger filesize 
+// > and not a function but a string (which I prefer tbh)
+/*
+const middle_processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gif}", {
+  query: {
+    w: "500;900;1200",
+    format: "webp;avif;jpg",
+    as: "srcset",
+  },
+  import: "default",
+  eager: true
+});
+*/
+
+// super import
+// > doesnt work, missing with and height attributes...
+/*
+const processed_images = import.meta.glob( "/src/assets/images/*.{jpeg,jpg,png,gif}", {
+  query: { 
+    format: "webp;avif;jpg", 
+    w: "300,600,1200", 
+  },
+  import: "default"
+});
+*/
+
+console.log( processed_images );
+// console.log( middle_processed_images );
+console.log( images );
+
+console.log( "this is the fucking image bro" );
+console.log( processed_images[ images[0] ]() );
+
+// console.log( "this is the middle image bro" );
+// console.log( middle_processed_images[ images[0] ] );
 ---
 
 <Layout title={`CCA | 2023 BFA Showcase | ${ data["Name"]}`}>
@@ -49,7 +90,11 @@ const images = db.get_artist_images( data["Name"] );
     <div class="content">
 
       <div class="hero">
-        <img class="hero__image" src={ images[2] }/>
+        <Image
+          class="hero__image"
+          src={ processed_images[ images[1] ]() }
+          alt={ `Exhibition documention of ${ data["Name"] }'s senior show.` }
+        />
       </div>
 
       <div class="artist">
@@ -88,7 +133,7 @@ const images = db.get_artist_images( data["Name"] );
         </ul>
 
         <Gallery 
-          client:only="svelte"
+          data-astro-reload
           artist = { data["Name"] }
           gallery_images = { images }
         />
@@ -158,7 +203,7 @@ const images = db.get_artist_images( data["Name"] );
     display: block;
     position: relative;
 
-    & img {
+    &__image {
       width: 100%;
       max-height: 66vh;
       object-fit: cover;
@@ -214,6 +259,7 @@ const images = db.get_artist_images( data["Name"] );
       margin-bottom: var(--spacing-item-gap);
     }
     &__links {
+      width: fit-content;
       list-style: inside;
       list-style-type: square;
       margin-bottom: var(--spacing-element-gap);
@@ -247,7 +293,9 @@ const images = db.get_artist_images( data["Name"] );
 
     &__image {
        //max-height: 280px;
-       width: 100%;
+      width: 100%;
+      height: auto;
+      object-fit: cover;
       margin-bottom: var(--spacing-item-gap);
     }
   }

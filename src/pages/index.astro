@@ -2,14 +2,23 @@
 import * as db from "../utils/db-handler.js";
 import { slugify } from "../utils/js-utils.js";
 import Layout from "../layouts/layout.astro";
+import { Image } from "astro:assets";
 import Navigation from "../components/navigation.astro";
 import CardArtwork from "../components/card-artwork.astro";
 import ExhibitionTitle from "../components/svgs/exhibition-title.astro";
 import ExhibitionSubTitle from "../components/svgs/fine-arts.astro";
 
+/*
 import Gallery from "../components/gallery-with-slideshow.svelte";
+*/
+import Gallery from "../components/gallery-with-slideshow.astro";
 
+/* When in public */
 const images = db.get_tagged_images("opening");
+
+/* When processed */
+const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gif}");
+// console.log( processed_images );
 ---
 
 <Layout title="CCA | 2023 BFA Showcase">
@@ -21,11 +30,20 @@ const images = db.get_tagged_images("opening");
         <ExhibitionSubTitle />
         <ExhibitionTitle />
 
-        <img class="gallery__image" src={ images[2] }>
+        <!--
+          <img class="gallery__image" src={ images[2] }>
+        -->
+
+        <Image 
+          class="gallery__hero"
+          src={processed_images["/src/assets/images/e6ef859e6207c6969994de0dcf28a72b.jpg"]()} 
+          alt="A photo from the opening of the CCA 2023 BFA Fall Exhibition."
+        />
+
       </section>
 
       <Gallery 
-        client:only="svelte"
+        data-astro-reload
         artist = "Opening"
         gallery_images = { images }
       />
@@ -47,8 +65,15 @@ const images = db.get_tagged_images("opening");
     position: relative;
     flex: 1;
 
+    &__hero {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+
     &__image {
       width: 100%;
+      object-fit: cover;
       margin-bottom: var(--spacing-item-gap);
     }
 
