@@ -13,7 +13,6 @@ import Gallery from "../components/gallery-with-slideshow.astro";
 const images = db.get_tagged_images("opening");
 /* When processed in "./src" */
 const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gif}");
-// console.log( processed_images );
 ---
 
 <Layout title="CCA | 2023 BFA Showcase">
@@ -29,10 +28,6 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
         <ExhibitionTitle />
 
         <div id="IMJUSTABOX" />
-
-        <!--
-          <img class="gallery__image" src={ images[2] }>
-        -->
 
         <Image 
           class="gallery__hero"
@@ -70,7 +65,8 @@ sEle.addEventListener( "click", () => {
 
   #cursor-effect {
     position: fixed;
-    // z-index: 99;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
   }
 
