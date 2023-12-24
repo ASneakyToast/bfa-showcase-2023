@@ -7,21 +7,19 @@ import Navigation from "../components/navigation.astro";
 import CardArtwork from "../components/card-artwork.astro";
 import ExhibitionTitle from "../components/svgs/exhibition-title.astro";
 import ExhibitionSubTitle from "../components/svgs/fine-arts.astro";
-
-/*
-import Gallery from "../components/gallery-with-slideshow.svelte";
-*/
 import Gallery from "../components/gallery-with-slideshow.astro";
 
-/* When in public */
+/* When in "./public" */
 const images = db.get_tagged_images("opening");
-
-/* When processed */
+/* When processed in "./src" */
 const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gif}");
 // console.log( processed_images );
 ---
 
 <Layout title="CCA | 2023 BFA Showcase">
+
+  <div id="cursor-effect" />
+
   <main>
     <Navigation />
 
@@ -30,13 +28,15 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
         <ExhibitionSubTitle />
         <ExhibitionTitle />
 
+        <div id="IMJUSTABOX" />
+
         <!--
           <img class="gallery__image" src={ images[2] }>
         -->
 
         <Image 
           class="gallery__hero"
-          src={processed_images["/src/assets/images/e6ef859e6207c6969994de0dcf28a72b.jpg"]()} 
+          src={ processed_images["/src/assets/images/e6ef859e6207c6969994de0dcf28a72b.jpg"]() } 
           alt="A photo from the opening of the CCA 2023 BFA Fall Exhibition."
         />
 
@@ -44,21 +44,50 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
 
       <Gallery 
         data-astro-reload
-        artist = "Opening"
-        gallery_images = { images }
+        artist="Opening"
+        gallery_images={ images }
       />
     </div>
   </main>
 </Layout>
+
+<script>
+import { createEffect } from "../components/p5-cursor-invert.js";
+
+const sEle = document.querySelector("#IMJUSTABOX");
+console.log( sEle );
+
+sEle.addEventListener( "click", () => {
+  createEffect();
+});
+
+</script>
 
 <style lang="scss">
   main {
     display: flex;
   }
 
+  #cursor-effect {
+    position: fixed;
+    // z-index: 99;
+    pointer-events: none;
+  }
+
+  #IMJUSTABOX {
+    width: 3vw;
+    height: 3vw;
+    background: black;
+    position: absolute;
+    top: var(--spacing-section-gap);
+    right: var(--spacing-element-gap);
+    cursor: pointer;
+  }
+
   :global(.gallery__images) {
     padding: 0 var(--spacing-element-gap);
-    background: linear-gradient(11deg, var(--color-black) 0%, var(--color-black) 26%, rgba(255,255,255,1) 26%, rgba(255,255,255,1) 100%);
+    // background: linear-gradient(11deg, var(--color-black) 0%, var(--color-black) 26%, rgba(255,255,255,1) 26%, rgba(255,255,255,1) 100%);
+    background: linear-gradient(11deg, var(--color-black) 0%, var(--color-black) 26%, rgba(255,255,255,0) 26%, rgba(255,255,255,0) 100%);
   }
 
   .gallery {
