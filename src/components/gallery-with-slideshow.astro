@@ -17,6 +17,10 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
         class="slideshow__image"
         src={ processed_images[ path ]() }
         alt={`Exhibition documentation of ${ artist_name }'s senior show.`}
+        width="1440"
+        format="webp"
+        role="img"
+        aria-label={`Exhibition documentation of ${ artist_name }'s senior show.`}
       />
     </div>
     ))}
@@ -29,6 +33,10 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
         class="gallery__image"
         src={ processed_images[ path ]() }
         alt={ `Exhibition documentation of ${ artist_name }'s senior show.` }
+        width="1440"
+        format="webp"
+        role="img"
+        aria-label={`Exhibition documentation of ${ artist_name }'s senior show.`}
       />
     ))}
   </section>

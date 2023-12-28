@@ -33,6 +33,10 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
           class="gallery__hero"
           src={ processed_images["/src/assets/images/e6ef859e6207c6969994de0dcf28a72b.jpg"]() } 
           alt="A photo from the opening of the CCA 2023 BFA Fall Exhibition."
+          width="1440"
+          format="webp"
+          role="img"
+          aria-label="A photo from the opening of the CCA 2023 BFA Fall Exhibition."
         />
 
       </section>
@@ -49,11 +53,16 @@ const processed_images = import.meta.glob("/src/assets/images/*.{jpeg,jpg,png,gi
 <script>
 import { createEffect } from "../components/p5-cursor-invert.js";
 
-const sEle = document.querySelector("#IMJUSTABOX");
-console.log( sEle );
+document.addEventListener('astro:page-load', () => {
 
-sEle.addEventListener( "click", () => {
-  createEffect();
+  console.log(" im working ");
+
+  const sEle = document.querySelector("#IMJUSTABOX");
+  console.log( sEle );
+
+  sEle.addEventListener( "click", () => {
+    createEffect();
+  });
 });
 
 </script>
